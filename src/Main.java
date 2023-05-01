@@ -200,9 +200,10 @@ public class Main extends  Application{
             Users user = (Users) table.getSelectionModel().getSelectedItem();
 
             try {
-                suprimer(user.getId());
                 if (!table.getSelectionModel().isEmpty()) {
+                    suprimer(user.getId());
                 }else {
+                    alert.setContentText("Selection un Utilisateur");
                     alert.showAndWait();
                 }
             } catch (SQLException e) {
