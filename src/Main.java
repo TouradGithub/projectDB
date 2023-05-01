@@ -198,8 +198,13 @@ public class Main extends  Application{
 
         siprimer.setOnAction((event -> {
             Users user = (Users) table.getSelectionModel().getSelectedItem();
+
             try {
                 suprimer(user.getId());
+                if (!table.getSelectionModel().isEmpty()) {
+                }else {
+                    alert.showAndWait();
+                }
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -263,7 +268,6 @@ public class Main extends  Application{
             }else {
                 alert.setContentText("donnée vide");
                 alert.showAndWait();
-                System.out.println("is Empty.");
             }
 
         }catch (Exception e){
