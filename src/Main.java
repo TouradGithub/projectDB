@@ -131,7 +131,7 @@ public class Main extends  Application{
                     @Override
                     public void handle(TableColumn.CellEditEvent<Users,String> cellEditEvent) {
                         ((Users) cellEditEvent.getTableView().getItems().get(
-                                update(
+                                modifier(
                                         cellEditEvent.getNewValue(),
                                         cellEditEvent.getRowValue().getPrenom(),
                                         cellEditEvent.getRowValue().getAge(),
@@ -164,7 +164,7 @@ public class Main extends  Application{
                     @Override
                     public void handle(TableColumn.CellEditEvent<Users,String> cellEditEvent) {
                         ((Users) cellEditEvent.getTableView().getItems().get(
-                                update(
+                                modifier(
                                         cellEditEvent.getRowValue().getNom(),
                                         cellEditEvent.getNewValue(),
                                         cellEditEvent.getRowValue().getAge(),
@@ -191,18 +191,40 @@ public class Main extends  Application{
 
         ajouter.setOnAction((event -> {
 
+            insert();
 
 
         }));
 
         siprimer.setOnAction((event -> {
-
+            Users user = (Users) table.getSelectionModel().getSelectedItem();
+            try {
+                suprimer(user.getId());
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }));
 
 
 
     }
-      
+        public int modifier(String nom,String prenom,int age,int id){
+            try{
+                    stmt = conn.createStatement();
+                    String sqlInsert = "UPDATE users SET nom ='"+nom+"', prenom = '"+prenom+"' ,age ='"+age+"' WHERE id="+id+"";
+                    stmt.executeUpdate(sqlInsert);
+
+                    alldata();
+                    alert.setContentText("donnée modifier");
+                    alert.showAndWait();
+                    alldata();
+        return 1;
+
+            }catch (Exception e){
+                e.printStackTrace();
+                return 0;
+            }
+        }
 
 
     public  void alldata() throws SQLException {
@@ -225,7 +247,43 @@ public class Main extends  Application{
 
     }
 
+    public  void insert(){
+        try{
+            if (!nom.getText().isEmpty() && !prenom.getText().isEmpty() && !age.getText().isEmpty()){
+                stmt = conn.createStatement();
+                String sqlInsert = "INSERT INTO users (nom, prenom, age) VALUES('"+nom.getText()+"', '"+prenom.getText()+"', "+Integer.parseInt(age.getText())+");";
+                stmt.executeUpdate(sqlInsert);
+                nom.setText("");
+                prenom.setText("");
+                age.setText("");
 
+            alldata();
+                alert.setContentText("donnée ajouter");
+                alert.showAndWait();
+            }else {
+                alert.setContentText("donnée vide");
+                alert.showAndWait();
+                System.out.println("is Empty.");
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    public  void suprimer(int id) throws SQLException {
+        String sql = "DELETE FROM users WHERE id ='"+id+"'";
+        stmt = conn.createStatement();
+        int rowsDeleted = stmt.executeUpdate(sql);
+        if (rowsDeleted > 0) {
+            System.out.println("Row deleted successfully.");
+        } else {
+            System.out.println("Row not found or not deleted.");
+        }
+    alldata();
+
+
+
+    }
 
 
 
