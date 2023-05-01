@@ -189,12 +189,21 @@ public class Main extends  Application{
 
 
 
+        ajouter.setOnAction((event -> {
 
+
+
+        }));
+
+        siprimer.setOnAction((event -> {
+
+        }));
 
 
 
     }
-    
+      
+
 
     public  void alldata() throws SQLException {
 
