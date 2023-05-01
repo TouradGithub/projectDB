@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.sql.*;
@@ -47,28 +48,47 @@ public class Main extends  Application{
     BorderPane root = new BorderPane();
 
      textLabel = new Label("Saisir votre information");
-     nom = new TextField();
+        textLabel.setTextFill(Color.BLACK);
+
+        textLabel.setStyle("-fx-font-size: 15; -fx-font-weight: bold;");
+
+
+
+        nom = new TextField();
         nom.setPrefWidth(100);
         nom.setPrefHeight(30);
         nom.setPromptText("NOM");
+        nom.setStyle("-fx-border-color: blue;");
 
-     prenom = new TextField();
+
+        prenom = new TextField();
         prenom.setPrefWidth(100);
         prenom.setPrefHeight(30);
         prenom.setPromptText("PRENOM");
+        prenom.setStyle("-fx-border-color: blue;");
 
-     age = new TextField();
+
+        age = new TextField();
         age.setPrefWidth(100);
         age.setPrefHeight(30);
         age.setPromptText("AGE");
+        age.setStyle("-fx-border-color: blue;");
 
-                ajouter =  new Button("Envoyer");
+        ajouter =  new Button("Inserer");
         ajouter.setMinWidth(150);
         ajouter.setPrefSize(22,33);
+        ajouter.setTextFill(Color.WHITE);
+
+        ajouter.setStyle("-fx-font-size: 18; -fx-font-weight: bold;-fx-background-color: blue;");
+
 
         siprimer =  new Button("Siprimer");
         siprimer.setMinWidth(150);
         siprimer.setPrefSize(22,33);
+        siprimer.setTextFill(Color.WHITE);
+        siprimer.setStyle("-fx-font-size: 18; -fx-font-weight: bold;-fx-background-color: red;");
+
+
         HBox hBox1 = new HBox();
         hBox1.setSpacing(10);
         hBox1.setPadding(new Insets(10));
@@ -87,7 +107,9 @@ public class Main extends  Application{
 
 
         labelTable = new Label("Tableau");
-    VBox vBox1= new VBox();
+        labelTable.setStyle("-fx-font-size: 15; -fx-font-weight: bold;");
+
+        VBox vBox1= new VBox();
         vBox1.setSpacing(10);
         vBox1.setPadding(new Insets(10));
         vBox1.getChildren().addAll(labelTable,table);
@@ -143,21 +165,22 @@ public class Main extends  Application{
                     }
                 }
         );
-//
-//
+
+
 //        colomnAge.setCellFactory(TextFieldTableCell.forTableColumn());
 //        colomnAge.setOnEditCommit(
 //                new EventHandler<TableColumn.CellEditEvent<Users,String>>() {
 //                    @Override
 //                    public void handle(TableColumn.CellEditEvent<Users,String> cellEditEvent) {
-//                        ( cellEditEvent.getTableView().getItems().get(
-//                                cellEditEvent.getTablePosition().getRow())
-//                        ).setAge(Integer.parseInt(cellEditEvent.getNewValue()));
+////                        ( cellEditEvent.getTableView().getItems().get(
+////                                cellEditEvent.getTablePosition().getRow())
+////                        ).setAge(Integer.parseInt(cellEditEvent.getNewValue()));
 //
 //
 //                    }
 //                }
 //        );
+
         columnPrenom.setCellFactory(TextFieldTableCell.forTableColumn());
         columnPrenom.setOnEditCommit(
                 new EventHandler<TableColumn.CellEditEvent<Users,String>>() {
@@ -190,15 +213,11 @@ public class Main extends  Application{
 
 
         ajouter.setOnAction((event -> {
-
             insert();
-
-
         }));
 
         siprimer.setOnAction((event -> {
             Users user = (Users) table.getSelectionModel().getSelectedItem();
-
             try {
                 if (!table.getSelectionModel().isEmpty()) {
                     suprimer(user.getId());
