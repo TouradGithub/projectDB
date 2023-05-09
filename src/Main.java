@@ -3,6 +3,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -33,7 +34,9 @@ public class Main extends  Application{
     public  Connection conn = null;
     public Statement stmt = null;
 
+     public void codeLogin(){
 
+     }
     //startContent();
     @Override
     public void start(Stage stage) throws Exception {
@@ -78,11 +81,10 @@ public class Main extends  Application{
         ajouter.setMinWidth(150);
         ajouter.setPrefSize(22,33);
         ajouter.setTextFill(Color.WHITE);
-
         ajouter.setStyle("-fx-font-size: 18; -fx-font-weight: bold;-fx-background-color: blue;");
 
 
-        siprimer =  new Button("Siprimer");
+        siprimer =  new Button("Suprimer");
         siprimer.setMinWidth(150);
         siprimer.setPrefSize(22,33);
         siprimer.setTextFill(Color.WHITE);
@@ -102,17 +104,20 @@ public class Main extends  Application{
         vBox.setBackground(new Background(new BackgroundFill(null,null,null)));
         vBox.setMaxWidth(400);
         vBox.getChildren().addAll(textLabel,nom,prenom,age,hBox1);
+        vBox.setAlignment(Pos.CENTER);
         root.setBottom(vBox);
 
 
 
         labelTable = new Label("Tableau");
-        labelTable.setStyle("-fx-font-size: 15; -fx-font-weight: bold;");
+        labelTable.setStyle("-fx-font-size: 18; -fx-font-weight: bold;");
 
         VBox vBox1= new VBox();
         vBox1.setSpacing(10);
         vBox1.setPadding(new Insets(10));
         vBox1.getChildren().addAll(labelTable,table);
+        vBox1.setAlignment(Pos.CENTER);
+
         root.setCenter(vBox1);
 
 
@@ -132,18 +137,28 @@ public class Main extends  Application{
 
         TableColumn columnID = new TableColumn("ID");
         columnID.setCellValueFactory(new PropertyValueFactory<>("id"));
+        columnID.setStyle("-fx-font-size: 18; -fx-font-weight: bold;");
+        columnID.setPrefWidth(80.0);
+
 
         TableColumn columnNom = new TableColumn("Nom");
         columnNom.setCellValueFactory(new PropertyValueFactory<>("nom"));
+        columnNom.setStyle("-fx-font-size: 18; -fx-font-weight: bold;");
+        columnNom.setPrefWidth(100.0);
+
 
         TableColumn columnPrenom = new TableColumn("Prenom");
         columnPrenom.setCellValueFactory(new PropertyValueFactory<>("prenom"));
+        columnPrenom.setStyle("-fx-font-size: 18; -fx-font-weight: bold;");
+        columnPrenom.setPrefWidth(100.0);
+
 
         TableColumn colomnAge = new TableColumn("Age");
         colomnAge.setCellValueFactory(new PropertyValueFactory<>("age"));
+        colomnAge.setStyle("-fx-font-size: 18; -fx-font-weight: bold;");
+        colomnAge.setPrefWidth(100.0);
 
-        TableColumn colomnActions = new TableColumn("Actions");
-        colomnActions.setCellValueFactory(new PropertyValueFactory<>("actions"));
+
 
         table.getColumns().addAll(columnID,columnNom, columnPrenom, colomnAge );
 
@@ -272,27 +287,63 @@ public class Main extends  Application{
 
     }
 
+
+
     public  void insert(){
         try{
-            if (!nom.getText().isEmpty() && !prenom.getText().isEmpty() && !age.getText().isEmpty()){
-                stmt = conn.createStatement();
-                String sqlInsert = "INSERT INTO users (nom, prenom, age) VALUES('"+nom.getText()+"', '"+prenom.getText()+"', "+Integer.parseInt(age.getText())+");";
-                stmt.executeUpdate(sqlInsert);
-                nom.setText("");
-                prenom.setText("");
-                age.setText("");
 
-            alldata();
-                alert.setContentText("donnée ajouter");
-                alert.showAndWait();
+            if (!nom.getText().isEmpty() && !prenom.getText().isEmpty() && !age.getText().isEmpty()){
+              if(Integer.parseInt(age.getText())>=0){
+                  stmt = conn.createStatement();
+
+                  String sqlInsert = "INSERT INTO users (nom, prenom, age) VALUES('"+nom.getText()+"', '"+prenom.getText()+"', "+Integer.parseInt(age.getText())+");";
+                  stmt.executeUpdate(sqlInsert);
+
+                  clearData();
+                  alldata();
+                  alert.setContentText("donnée ajouter");
+                  alert.showAndWait();
+              }{
+                    alert.setContentText("Age invalid");
+                    alert.showAndWait();
+              }
             }else {
-                alert.setContentText("donnée vide");
+//                String rs=validationInput(nom.getText(),prenom.getText(),age.getText());
+                alert.setContentText("donnée  vide");
                 alert.showAndWait();
             }
 
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+    public  String validationInput(String nom1,String prenom1,String age1) {
+        String result=null;
+      try {
+          if (nom1.isEmpty() && prenom1.isEmpty() && age1.isEmpty()){
+              this.prenom.setStyle("-fx-border-color: red;");
+              this.nom.setStyle("-fx-border-color: red;");
+              this.age.setStyle("-fx-border-color: red;");
+               result="nom ,prenom ,age";
+
+          }  if (prenom1.isEmpty()  ) {
+              this.prenom.setStyle("-fx-border-color: red;");
+              return result+ "prenom , nom";
+          }  if (age1.isEmpty() && nom1.isEmpty()) {
+              this.age.setStyle("-fx-border-color: red;");
+              this.nom.setStyle("-fx-border-color: red;");
+              return "age nom";
+
+          }if (age1.isEmpty() && prenom1.isEmpty()){
+              this.nom.setStyle("-fx-border-color: red;");
+              return "nom";
+
+          }
+      }catch (Exception e){
+
+          e.printStackTrace();
+      }
+        return "";
     }
     public  void suprimer(int id) throws SQLException {
         String sql = "DELETE FROM users WHERE id ='"+id+"'";
@@ -307,6 +358,14 @@ public class Main extends  Application{
 
 
 
+    }
+    public void clearData(){
+        nom.setText("");
+        prenom.setText("");
+        age.setText("");
+        this.prenom.setStyle("-fx-border-color: blue;");
+        this.nom.setStyle("-fx-border-color: blue;");
+        this.age.setStyle("-fx-border-color: blue;");
     }
 
 
